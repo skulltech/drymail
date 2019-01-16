@@ -129,7 +129,7 @@ class SMTPMailer:
 
 def stringify_address(address):
     """
-    Converts an address into a string in the "name <email@example.com>" format, which can be directly used in the
+    Converts an address into a string in the `"John Doe" <john@example.com>"` format, which can be directly used in the
     headers of an email.
 
     Parameters
@@ -141,7 +141,7 @@ def stringify_address(address):
     Returns
     -------
     str
-        Address as a single string, in the "name <email@example.com" format. Returns
+        Address as a single string, in the `"John Doe" <john@example.com>"` format. Returns
         `address` unchanged if it's a single string.
     """
     address = ('', address) if isinstance(address, str) else address
@@ -151,7 +151,7 @@ def stringify_address(address):
 def stringify_addresses(addresses):
     """
     Converts a list of addresses into a string in the
-    "john <john@example.com>, jane <jane@example.com" format,
+    `"John Doe" <john@example.com>, "Jane" <jane@example.com>"` format,
     which can be directly used in the headers of an email.
 
     Parameters

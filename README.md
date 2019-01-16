@@ -1,7 +1,7 @@
 # drymail
 Makes sending emails easy and DRY — For Python 3.
 
-__Drymail__ is a minimalist wrapper over Python’s existing [`smtplib`](https://docs.python.org/3/library/smtplib.html) and [`email`](https://docs.python.org/3/library/email.html) libraries, designed to be friendly but unrestrictive. Here’s how you might send a simple email with an attachment using _drymail_.
+__Drymail__ is a minimalist wrapper over Python’s existing [smtplib](https://docs.python.org/3/library/smtplib.html) and [email](https://docs.python.org/3/library/email.html) libraries, designed to be friendly but unrestrictive. Here’s how you might send a simple email with an attachment using _drymail_.
 
 ```python
 from drymail import SMTPMailer, Message
@@ -18,7 +18,7 @@ client.send(message)
 ## Features
 
 - Supports creating email with HTML content, plaintext content, or both!
-- Supports mentioning contacts in the `name <name@email.com>` format.
+- Supports mentioning contacts in the `“John Doe" <john@email.com>` format.
 - Support standard headers like `CC`, `BCC`, `Reply-To` and `Authors`.
 - Supports injecting custom headers.
 - Supports adding attachments.
