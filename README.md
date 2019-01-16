@@ -32,6 +32,10 @@ Install `drymail` by running —
 $ pip3 install drymail
 ```
 
+## Documentation
+
+Documentation is available at https://drymail.readthedocs.io/
+
 ## Contribute
 
 All kinds of contribution are welcome.
