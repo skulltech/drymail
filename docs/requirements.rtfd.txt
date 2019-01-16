@@ -1,1 +1,3 @@
+mistune
+beautifulsoup4
 m2r
