@@ -5,4 +5,4 @@ source_parsers = {
 }
 
 source_suffix = ['.rst', '.md']
-extensions = ['sphinxcontrib.napoleon']
+extensions = ['sphinx.ext.napoleon']
