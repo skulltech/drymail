@@ -67,6 +67,8 @@ class SMTPMailer:
                 self.__ssloptions[key] = kwargs.get(key, None)
         elif tls:
             self.port = port or 587
+        else:
+            self.port = port or 25
         self.user = user
         self.password = password
         self.connected = False
