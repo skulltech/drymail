@@ -1,5 +1,7 @@
 # drymail
-Makes sending emails easy and DRY — For Python 3.
+Makes sending emails easy and DRY — For Python 3.  
+
+[![PyPI version](https://badge.fury.io/py/drymail.svg)](https://badge.fury.io/py/drymail)
 
 __Drymail__ is a minimalist wrapper over Python’s existing [smtplib](https://docs.python.org/3/library/smtplib.html) and [email](https://docs.python.org/3/library/email.html) libraries, designed to be friendly but unrestrictive. Here’s how you might send a simple email with an attachment using _drymail_.
 
