@@ -194,7 +194,7 @@ class Message:
     bcc : list of (str or (str, str)), optional
         The list of addresses to BCC to. Each element can be either an email address or a tuple of a name and an email
         address.
-    replyto : list of (str or (str, str)), optional
+    reply_to : list of (str or (str, str)), optional
         The list of addresses to mention in the `Reply-To` header. Each element can be either an email address or a
         tuple of a name and an email address.
     headers : list of str, optional
@@ -210,7 +210,7 @@ class Message:
 
     Attributes
     ----------
-    message: `email.messsage.Message` object or `email.mime.multipart.MIMEMultipart` object
+    message: `email.message.Message` object or `email.mime.multipart.MIMEMultipart` object
         The prepared message object.
     prepared: bool
         Whether the message is prepared, in other words whether `self.message` is available and proper.
@@ -230,7 +230,7 @@ class Message:
     bcc : list of (str or (str, str))
         The list of addresses to BCC to. Each element can be either an email address or a tuple of a name and an email
         address.
-    replyto : list of (str or (str, str))
+    reply_to : list of (str or (str, str))
         The list of addresses to mention in the `Reply-To` header. Each element can be either an email address or a
         tuple of a name and an email address.
     headers : list of str
@@ -243,7 +243,7 @@ class Message:
         A prepared email as bytes.
     """
 
-    def __init__(self, sender, receivers, subject=None, authors=None, cc=None, bcc=None, replyto=None, headers=None,
+    def __init__(self, sender, receivers, subject=None, authors=None, cc=None, bcc=None, reply_to=None, headers=None,
                  text=None, html=None, prepared_message=None):
         self.subject = subject or ''
         self.sender = sender
@@ -252,7 +252,7 @@ class Message:
         self.cc = cc
         self.bcc = bcc
         self.headers = headers
-        self.replyto = replyto
+        self.reply_to = reply_to
         self.text = text or ''
         self.html = html or ''
         self.__attachments = []
@@ -324,8 +324,8 @@ class Message:
             self.message['CC'] = stringify_addresses(self.cc)
         if self.bcc:
             self.message['BCC'] = stringify_addresses(self.bcc)
-        if self.replyto:
-            self.message['Reply-To'] = stringify_addresses(self.replyto)
+        if self.reply_to:
+            self.message['Reply-To'] = stringify_addresses(self.reply_to)
 
         body = MIMEMultipart('alternative')
         plaintext_part = MIMEText(self.text, 'plain')
