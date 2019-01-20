@@ -1,5 +1,5 @@
 # drymail
-Makes sending emails easy and DRY — For Python 3.  
+Makes sending emails easy and [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) — For Python 3.  
 
 [![PyPI version](https://badge.fury.io/py/drymail.svg)](https://badge.fury.io/py/drymail)
 
