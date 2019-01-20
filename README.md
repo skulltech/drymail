@@ -10,7 +10,7 @@ from drymail import SMTPMailer, Message
 
 client = SMTPMailer(host='smtp.email.com', user='johndoe', password='password', tls=True)
 message = Message(subject='Congrats on the new job!', sender=('John Doe', 'john@email.com'), 
-                  receivers=[('Jane Doe', 'jane@message.com'), 'jane.doe@mail.io'])
+                  receivers=[('Jane Doe', 'jane@message.com'), 'jane.doe@mail.io'], text='When is the party? ;)')
 with open('congrats.pdf', 'rb') as pdf_file:
     message.attach(filename='congrats.pdf', data=pdf_file.read(), mimetype='application/pdf')
 
