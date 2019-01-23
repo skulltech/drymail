@@ -260,9 +260,11 @@ class Message:
         self.__attachments = []
         self.prepared_message = prepared_message
         self.prepared = False
-        self.message = None
+        self.message = MIMEMultipart('mixed')
 
     def __str__(self):
+        if not self.prepared:
+            self.prepare()
         return self.message.as_string()
 
     @property
@@ -314,7 +316,6 @@ class Message:
             self.prepared = True
             return
 
-        self.message = MIMEMultipart('mixed')
         self.text = self.text or BeautifulSoup(self.html, 'html.parser').get_text(strip=True)
         self.html = self.html or mistune.markdown(self.text)
 
