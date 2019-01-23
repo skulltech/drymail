@@ -38,6 +38,11 @@ $ pip3 install drymail
 
 Documentation is available at https://drymail.readthedocs.io/
 
+## Agenda
+
+- Test suite.
+- Restructure the `Message` class to handle dynamic `prepare`.
+
 ## Contribute
 
 All kinds of contribution are welcome.
