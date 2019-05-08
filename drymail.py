@@ -199,8 +199,8 @@ class Message:
     reply_to : list of (str or (str, str)), optional
         The list of addresses to mention in the `Reply-To` header. Each element can be either an email address or a
         tuple of a name and an email address.
-    headers : list of str, optional
-        Custom headers to inject into the email.
+    headers : dict, optional
+        Custom headers as key-value pairs, to be injected into the email.
     text: str, optional
         The body of the message, as plaintext. At least one among `text` and `html`
         must be provided.
@@ -235,8 +235,8 @@ class Message:
     reply_to : list of (str or (str, str))
         The list of addresses to mention in the `Reply-To` header. Each element can be either an email address or a
         tuple of a name and an email address.
-    headers : list of str
-        Custom headers to inject into the email.
+    headers : dict
+        Custom headers as key-value pairs, to be injected into the email.
     text: str
         The body of the message, as plaintext.
     html: str
@@ -329,6 +329,9 @@ class Message:
             self.message['BCC'] = stringify_addresses(self.bcc)
         if self.reply_to:
             self.message['Reply-To'] = stringify_addresses(self.reply_to)
+        if self.headers:
+            for key, value in self.headers.items():
+                self.message[key] = value
 
         body = MIMEMultipart('alternative')
         plaintext_part = MIMEText(self.text, 'plain')
