@@ -258,6 +258,7 @@ class Message:
         self.text = text or ''
         self.html = html or ''
         self.__attachments = []
+        self.__attachments_data = []
         self.prepared_message = prepared_message
         self.prepared = False
         self.message = MIMEMultipart('mixed')
@@ -279,7 +280,7 @@ class Message:
         """
         return self.__attachments
 
-    def attach(self, data, filename, mimetype=None):
+    def attach(self, data, filename, mimetype=None, is_attachment=False):
         """
         Add a file as attachment to the email.
 
@@ -291,20 +292,26 @@ class Message:
             The name of the file to be attached.
         mimetype : str, optional
             The MIMEType of the file to be attached.
+        is_attachment : bool, optional
+            Add attachment during prepare instead of immediately.
+            Places file attachments (i.e. jpg, pdf) at the end of the message.
         """
         if self.prepared_message:
             return
 
-        if not mimetype:
-            mimetype, encoding = mimetypes.guess_type(filename)
-            if mimetype is None or encoding is not None:
-                mimetype = 'application/octet-stream'
-        maintype, subtype = mimetype.split('/', 1)
-        attachment = MIMEBase(maintype, subtype)
-        attachment.set_payload(data)
-        encoders.encode_base64(attachment)
-        attachment.add_header('Content-Disposition', 'attachment', filename=filename)
-        self.message.attach(attachment)
+        if is_attachment:
+            self.__attachments_data.append([data, filename, mimetype])
+        else:
+            if not mimetype:
+                mimetype, encoding = mimetypes.guess_type(filename)
+                if mimetype is None or encoding is not None:
+                    mimetype = 'application/octet-stream'
+            maintype, subtype = mimetype.split('/', 1)
+            attachment = MIMEBase(maintype, subtype)
+            attachment.set_payload(data)
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', 'attachment', filename=filename)
+            self.message.attach(attachment)
         self.__attachments.append(filename)
 
     def prepare(self):
@@ -339,4 +346,7 @@ class Message:
         body.attach(plaintext_part)
         body.attach(html_part)
         self.message.attach(body)
+        if self.__attachments_data:
+            for n in self.__attachments_data:
+                self.attach(*n)
         self.prepared = True
