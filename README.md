@@ -1,5 +1,5 @@
 # drymail
-Makes sending emails easy and [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) — For Python 3.  
+Makes sending emails easy and [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) — For Python 3.
 
 [![PyPI version](https://badge.fury.io/py/drymail.svg)](https://badge.fury.io/py/drymail)
 
@@ -9,10 +9,9 @@ __Drymail__ is a minimalist wrapper over Python’s existing [smtplib](https://d
 from drymail import SMTPMailer, Message
 
 client = SMTPMailer(host='smtp.email.com', user='johndoe', password='password', tls=True)
-message = Message(subject='Congrats on the new job!', sender=('John Doe', 'john@email.com'), 
+message = Message(subject='Congrats on the new job!', sender=('John Doe', 'john@email.com'),
                   receivers=[('Jane Doe', 'jane@message.com'), 'jane.doe@mail.io'], text='When is the party? ;)')
-with open('congrats.pdf', 'rb') as pdf_file:
-    message.attach(filename='congrats.pdf', data=pdf_file.read(), mimetype='application/pdf')
+message.attach(filename='/path/to/congrats.pdf', mimetype='application/pdf')
 
 client.send(message)
 ```
