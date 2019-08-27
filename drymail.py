@@ -9,7 +9,7 @@ from smtplib import SMTP, SMTP_SSL, SMTPServerDisconnected
 
 import mistune
 from bs4 import BeautifulSoup
-
+from os.path import basename
 
 class SMTPMailer:
     """
@@ -258,6 +258,7 @@ class Message:
         self.text = text or ''
         self.html = html or ''
         self.__attachments = []
+        self.__late_attachments = []
         self.prepared_message = prepared_message
         self.prepared = False
         self.message = MIMEMultipart('mixed')
@@ -307,6 +308,19 @@ class Message:
         self.message.attach(attachment)
         self.__attachments.append(filename)
 
+    def attach_late(self, path, mimetype=None):
+        """
+        Add a file as attachment to the end of the email.
+
+        Parameters
+        ----------
+        path: str
+            The path of the file to be attached.
+        mimetype : str, optional
+            The MIMEType of the file to be attached.
+        """
+        self.__late_attachments.append([path, mimetype])
+
     def prepare(self):
         """
         Prepare the `self.message` object.
@@ -339,4 +353,8 @@ class Message:
         body.attach(plaintext_part)
         body.attach(html_part)
         self.message.attach(body)
+        if self.__late_attachments:
+            for a_late_attachment in self.__late_attachments:
+                with open(a_late_attachment[0], 'rb') as a_file:
+                    self.attach(filename=basename(a_late_attachment[0]), data=a_file.read(), mimetype=a_late_attachment[1])
         self.prepared = True
