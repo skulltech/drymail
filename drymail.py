@@ -280,46 +280,42 @@ class Message:
         """
         return self.__attachments
 
-    def attach(self, data, filename, mimetype=None):
+    def attach(self, filename, data=None, mimetype=None):
         """
         Add a file as attachment to the email.
 
         Parameters
         ----------
-        data: bytes
+        data: bytes, optional
             The raw content of the file to be attached.
         filename : str
-            The name of the file to be attached.
+            If data is provoded:
+                The filename of the file to be attached.
+            If data not provoded:
+                The full name (path + filename) of the
+                file to be attached.
         mimetype : str, optional
             The MIMEType of the file to be attached.
         """
         if self.prepared_message:
             return
 
+        filename_only = basename(filename)
         if not mimetype:
             mimetype, encoding = mimetypes.guess_type(filename)
             if mimetype is None or encoding is not None:
                 mimetype = 'application/octet-stream'
-        maintype, subtype = mimetype.split('/', 1)
-        attachment = MIMEBase(maintype, subtype)
-        attachment.set_payload(data)
-        encoders.encode_base64(attachment)
-        attachment.add_header('Content-Disposition', 'attachment', filename=filename)
-        self.message.attach(attachment)
-        self.__attachments.append(filename)
-
-    def attach_late(self, path, mimetype=None):
-        """
-        Add a file as attachment to the end of the email.
-
-        Parameters
-        ----------
-        path: str
-            The path of the file to be attached.
-        mimetype : str, optional
-            The MIMEType of the file to be attached.
-        """
-        self.__late_attachments.append([path, mimetype])
+        if data:
+            maintype, subtype = mimetype.split('/', 1)
+            attachment = MIMEBase(maintype, subtype)
+            attachment.set_payload(data)
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', 'attachment', filename=filename_only)
+            self.message.attach(attachment)
+        else:
+            self.__late_attachments.append([filename, mimetype])
+        if filename_only not in self.__attachments:
+            self.__attachments.append(filename_only)
 
     def prepare(self):
         """
