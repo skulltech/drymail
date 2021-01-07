@@ -62,13 +62,14 @@ class SMTPMailer:
         self.tls = tls
         if ssl:
             self.port = port or 465
-            self.__ssloptions = dict()
-            for key in ['keyfile', 'certfile', 'context']:
-                self.__ssloptions[key] = kwargs.get(key, None)
         elif tls:
             self.port = port or 587
         else:
             self.port = port or 25
+        if kwargs is not None:
+            self.__ssloptions = dict()
+            for key in ['keyfile', 'certfile', 'context']:
+                self.__ssloptions[key] = kwargs.get(key, None)
         self.user = user
         self.password = password
         self.connected = False
@@ -82,7 +83,7 @@ class SMTPMailer:
                                                                                **self.__ssloptions)
         self.client.ehlo()
         if self.tls:
-            self.client.starttls()
+            self.client.starttls(**self.__ssloptions)
             self.client.ehlo()
         if self.user and self.password:
             self.client.login(self.user, self.password)
