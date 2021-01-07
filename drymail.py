@@ -9,7 +9,7 @@ from smtplib import SMTP, SMTP_SSL, SMTPServerDisconnected
 
 import mistune
 from bs4 import BeautifulSoup
-
+from os.path import basename
 
 class SMTPMailer:
     """
@@ -259,6 +259,7 @@ class Message:
         self.text = text or ''
         self.html = html or ''
         self.__attachments = []
+        self.__attachments_data = []
         self.prepared_message = prepared_message
         self.prepared = False
         self.message = MIMEMultipart('mixed')
@@ -280,33 +281,42 @@ class Message:
         """
         return self.__attachments
 
-    def attach(self, data, filename, mimetype=None):
+    def attach(self, filename, data=None, mimetype=None):
         """
         Add a file as attachment to the email.
 
         Parameters
         ----------
-        data: bytes
-            The raw content of the file to be attached.
         filename : str
-            The name of the file to be attached.
+            If data is provoded:
+                The filename of the file to be attached.
+            If data not provoded:
+                The full name (path + filename) of the
+                file to be attached.
+        data: bytes, optional
+            The raw content of the file to be attached.
         mimetype : str, optional
             The MIMEType of the file to be attached.
         """
         if self.prepared_message:
             return
 
+        filename_only = basename(filename)
         if not mimetype:
             mimetype, encoding = mimetypes.guess_type(filename)
             if mimetype is None or encoding is not None:
                 mimetype = 'application/octet-stream'
-        maintype, subtype = mimetype.split('/', 1)
-        attachment = MIMEBase(maintype, subtype)
-        attachment.set_payload(data)
-        encoders.encode_base64(attachment)
-        attachment.add_header('Content-Disposition', 'attachment', filename=filename)
-        self.message.attach(attachment)
-        self.__attachments.append(filename)
+        if data:
+            maintype, subtype = mimetype.split('/', 1)
+            attachment = MIMEBase(maintype, subtype)
+            attachment.set_payload(data)
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', 'attachment', filename=filename_only)
+            self.message.attach(attachment)
+        else:
+            self.__attachments_data.append([filename, mimetype])
+        if filename_only not in self.__attachments:
+            self.__attachments.append(filename_only)
 
     def prepare(self):
         """
@@ -340,4 +350,8 @@ class Message:
         body.attach(plaintext_part)
         body.attach(html_part)
         self.message.attach(body)
+        if self.__attachments_data:
+            for attachment_data in self.__attachments_data:
+                with open(attachment_data[0], 'rb') as a_file:
+                    self.attach(filename=basename(attachment_data[0]), data=a_file.read(), mimetype=attachment_data[1])
         self.prepared = True
